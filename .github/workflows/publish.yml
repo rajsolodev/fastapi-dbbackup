@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # ─────────────────────────────────────────────
-      # Enforce tag format + auto-bump version
+      # Enforce tag format + auto-bump version (SAFE)
       # ─────────────────────────────────────────────
       - name: Enforce tag format and auto-bump version
         run: |
@@ -32,31 +32,22 @@ jobs:
           VERSION="${TAG#v}"
           echo "Version extracted from tag: $VERSION"
 
+          # Install tomlkit (safe round-trip TOML editor)
+          python -m pip install --quiet tomlkit
+
           python - <<EOF
-          import tomllib, pathlib
+          from tomlkit import parse, dumps
+          from pathlib import Path
 
-          version = "$VERSION"   # ✅ inject shell variable into Python
+          version = "$VERSION"
 
-          path = pathlib.Path("pyproject.toml")
-          data = tomllib.loads(path.read_text())
+          path = Path("pyproject.toml")
+          doc = parse(path.read_text())
 
-          data["project"]["version"] = version
+          doc["project"]["version"] = version
 
-          def dump(section, values):
-              out = f"[{section}]\n"
-              for k, v in values.items():
-                  if isinstance(v, dict):
-                      out += dump(k, v)
-                  else:
-                      out += f'{k} = "{v}"\n'
-              return out
-
-          content = ""
-          for section, values in data.items():
-              content += dump(section, values) + "\n"
-
-          path.write_text(content)
-          print(f"pyproject.toml version set to {version}")
+          path.write_text(dumps(doc))
+          print("pyproject.toml version updated to", version)
           EOF
 
       # ─────────────────────────────────────────────
