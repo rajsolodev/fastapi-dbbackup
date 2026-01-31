@@ -68,6 +68,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://pypi.pkg.github.com/rajsolodev/
+          username: __token__
           password: ${{ secrets.GITHUB_TOKEN }}
           attestations: false
           skip-existing: true
