@@ -40,11 +40,6 @@ nav:
 
 plugins:
   - search
-  - mkdocstrings:
-      handlers:
-        python:
-          # Handled by pip install . in the CI
-          import: []
 
 markdown_extensions:
   - admonition
