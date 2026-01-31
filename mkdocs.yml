@@ -18,7 +18,7 @@ theme:
         icon: material/brightness-7
         name: Switch to dark mode
   features:
-    - navigation.sections
+    - navigation.expand
     - navigation.top
     - search.suggest
     - search.highlight
@@ -28,12 +28,15 @@ repo_name: rajsolodev/fastapi-dbbackup
 repo_url: https://github.com/rajsolodev/fastapi-dbbackup
 
 nav:
-  - Home: index.md
-  - Installation: installation.md
-  - Configuration: configuration.md
-  - Storage Backends: storage.md
-  - Database Engines: engines.md
-  - CLI Reference: cli.md
+  - Overall:
+      - Home: index.md
+  - Setup:
+      - Installation: installation.md
+      - Configuration: configuration.md
+  - Using the Tool:
+      - Storage Backends: storage.md
+      - Database Engines: engines.md
+      - CLI Reference: cli.md
 
 plugins:
   - search
