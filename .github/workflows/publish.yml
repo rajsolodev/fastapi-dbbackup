@@ -32,14 +32,15 @@ jobs:
           VERSION="${TAG#v}"
           echo "Version extracted from tag: $VERSION"
 
-          # Update pyproject.toml version in-place (CI only)
           python - <<EOF
           import tomllib, pathlib
+
+          version = "$VERSION"   # ✅ inject shell variable into Python
 
           path = pathlib.Path("pyproject.toml")
           data = tomllib.loads(path.read_text())
 
-          data["project"]["version"] = "$VERSION"
+          data["project"]["version"] = version
 
           def dump(section, values):
               out = f"[{section}]\n"
@@ -55,7 +56,7 @@ jobs:
               content += dump(section, values) + "\n"
 
           path.write_text(content)
-          print(f"pyproject.toml version set to {VERSION}")
+          print(f"pyproject.toml version set to {version}")
           EOF
 
       # ─────────────────────────────────────────────
