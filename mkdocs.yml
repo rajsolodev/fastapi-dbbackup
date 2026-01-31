@@ -28,8 +28,7 @@ repo_name: rajsolodev/fastapi-dbbackup
 repo_url: https://github.com/rajsolodev/fastapi-dbbackup
 
 nav:
-  - Overall:
-      - Home: index.md
+  - Home: index.md
   - Setup:
       - Installation: installation.md
       - Configuration: configuration.md
