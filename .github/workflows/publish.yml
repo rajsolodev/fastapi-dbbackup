@@ -44,6 +44,12 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           skip-existing: true
+      - name: Show GitHub context
+        run: |
+          echo "Repo: $GITHUB_REPOSITORY"
+          echo "Ref: $GITHUB_REF"
+          echo "Workflow: $GITHUB_WORKFLOW"
+          echo "Environment: pypi"
 
   github-publish:
     name: Upload to GitHub Packages
@@ -61,7 +67,7 @@ jobs:
       - name: Publish to GitHub Packages
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://pypi.pkg.github.com/${{ github.repository }}/
+          repository-url: https://pypi.pkg.github.com/rajsolodev/
           password: ${{ secrets.GITHUB_TOKEN }}
           attestations: false
           skip-existing: true
