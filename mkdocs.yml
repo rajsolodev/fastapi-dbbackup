@@ -1,0 +1,57 @@
+site_name: fastapi-dbbackup
+site_url: https://rajsolodev.github.io/fastapi-dbbackup/
+site_description: Database-native backup tool for FastAPI and SQLAlchemy.
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: teal
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+repo_name: rajsolodev/fastapi-dbbackup
+repo_url: https://github.com/rajsolodev/fastapi-dbbackup
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Configuration: configuration.md
+  - Storage Backends: storage.md
+  - Database Engines: engines.md
+  - CLI Reference: cli.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          setup_commands:
+            - import os
+            - import sys
+            - sys.path.append(os.getcwd())
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - md_in_html

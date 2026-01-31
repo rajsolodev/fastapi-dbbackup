@@ -15,6 +15,12 @@ class LocalStorage(StorageBackend):
             return local_path.name
         return local_path.name
 
+    def upload_fileobj(self, fileobj: BinaryIO, remote_path: str) -> str:
+        dest = self.backup_dir / remote_path
+        with open(dest, "wb") as f:
+            shutil.copyfileobj(fileobj, f)
+        return remote_path
+
     def download(self, remote_path: str, local_path: Path):
         src = self.backup_dir / remote_path
         if src != local_path:

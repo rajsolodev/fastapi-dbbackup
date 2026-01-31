@@ -6,6 +6,7 @@ authors = [
     { name = "Rajesh Kumar", email = "contact@geekyshows.com" }
 ]
 license = "MIT"
+license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.8"
 keywords = ["fastapi", "sqlalchemy", "backup", "database", "postgres", "mysql", "sqlite", "s3"]
@@ -56,4 +57,15 @@ include = ["fastapi_dbbackup*"]
 members = [
     "demo_project",
     ".",
+]
+
+[dependency-groups]
+dev = [
+    "black>=26.1.0",
+    "isort>=7.0.0",
+    "mkdocs-material>=9.7.1",
+    "mkdocstrings[python]>=1.0.2",
+    "mypy>=1.19.1",
+    "pytest>=9.0.2",
+    "pytest-cov>=7.0.0",
 ]

@@ -1,11 +1,16 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List
+from typing import List, BinaryIO
 
 class StorageBackend(ABC):
     @abstractmethod
     def upload(self, local_path: Path) -> str:
         """Upload a file to storage and return its remote path/identifier."""
+        pass
+    
+    @abstractmethod
+    def upload_fileobj(self, fileobj: BinaryIO, remote_path: str) -> str:
+        """Upload a file-like object to storage and return its remote path/identifier."""
         pass
 
     @abstractmethod
