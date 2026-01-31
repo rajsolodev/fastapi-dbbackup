@@ -58,5 +58,7 @@ jobs:
       - name: Publish to GitHub Packages
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          repository-url: https://pypi.pkg.github.com/${{ github.repository }}
+          repository-url: https://pypi.pkg.github.com/${{ github.repository }}/
           password: ${{ secrets.GITHUB_TOKEN }}
+          attestations: false
+          skip-existing: true
