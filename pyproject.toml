@@ -1,0 +1,59 @@
+[project]
+name = "fastapi-dbbackup"
+version = "0.1.0"
+description = "Database-native backup tool for FastAPI and SQLAlchemy"
+authors = [
+    { name = "Rajesh Kumar", email = "contact@geekyshows.com" }
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.8"
+keywords = ["fastapi", "sqlalchemy", "backup", "database", "postgres", "mysql", "sqlite", "s3"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Database",
+    "Topic :: System :: Archiving :: Backup",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "sqlalchemy>=2.0.0",
+    "boto3>=1.26.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov",
+    "black",
+    "isort",
+    "mypy",
+]
+
+[project.scripts]
+fastapi-dbbackup = "fastapi_dbbackup.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/rajsolodev/fastapi-dbbackup"
+Repository = "https://github.com/rajsolodev/fastapi-dbbackup"
+"Bug Tracker" = "https://github.com/rajsolodev/fastapi-dbbackup/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fastapi_dbbackup*"]
+
+[tool.uv.workspace]
+members = [
+    "demo_project",
+    ".",
+]
