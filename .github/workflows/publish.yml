@@ -69,6 +69,6 @@ jobs:
         with:
           repository-url: https://pypi.pkg.github.com/rajsolodev/
           username: __token__
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GH_PACKAGES_TOKEN }}
           attestations: false
           skip-existing: true
