@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-dbbackup"
-version = "0.1.1"
+version = "0.1.2"
 description = "Database-native backup tool for FastAPI and SQLAlchemy"
 authors = [
     { name = "Rajesh Kumar", email = "contact@geekyshows.com" }
@@ -21,6 +21,9 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+
 ]
 dependencies = [
     "sqlalchemy>=2.0.0",

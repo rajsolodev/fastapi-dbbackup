@@ -7,7 +7,6 @@ on:
       - main
     paths:
       - "docs/**"
-      - "site/**"
       - "mkdocs.yml"
 
   # Manual trigger (Run workflow button)
