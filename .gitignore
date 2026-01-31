@@ -15,10 +15,21 @@ htmlcov/
 venv/
 ENV/
 
+# MkDocs
+site/
+.cache/
+
 # Project Specific
 backups/
 *.sqlite3
+*.dump
+*.sql
+*.gz
 .env
 
 # Exclude demo project from the main repository
 demo_project/
+
+# OS files
+.DS_Store
+Thumbs.db
