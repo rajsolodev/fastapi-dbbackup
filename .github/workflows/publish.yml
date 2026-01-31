@@ -1,8 +1,8 @@
 name: publish
+
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,14 +11,64 @@ jobs:
   build:
     name: Build distribution packages
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      # ─────────────────────────────────────────────
+      # Enforce tag format + auto-bump version
+      # ─────────────────────────────────────────────
+      - name: Enforce tag format and auto-bump version
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          echo "Release tag: $TAG"
+
+          # Require strict SemVer tag: vX.Y.Z
+          if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Invalid tag format. Use vX.Y.Z (example: v1.2.3)"
+            exit 1
+          fi
+
+          VERSION="${TAG#v}"
+          echo "Version extracted from tag: $VERSION"
+
+          # Update pyproject.toml version in-place (CI only)
+          python - <<EOF
+          import tomllib, pathlib
+
+          path = pathlib.Path("pyproject.toml")
+          data = tomllib.loads(path.read_text())
+
+          data["project"]["version"] = "$VERSION"
+
+          def dump(section, values):
+              out = f"[{section}]\n"
+              for k, v in values.items():
+                  if isinstance(v, dict):
+                      out += dump(k, v)
+                  else:
+                      out += f'{k} = "{v}"\n'
+              return out
+
+          content = ""
+          for section, values in data.items():
+              content += dump(section, values) + "\n"
+
+          path.write_text(content)
+          print(f"pyproject.toml version set to {VERSION}")
+          EOF
+
+      # ─────────────────────────────────────────────
+      # Build
+      # ─────────────────────────────────────────────
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
+
       - name: Build package
         run: uv build
+
       - name: Store distribution packages
         uses: actions/upload-artifact@v4
         with:
@@ -29,46 +79,22 @@ jobs:
     name: Upload to PyPI
     needs: build
     runs-on: ubuntu-latest
+
     environment:
       name: pypi
       url: https://pypi.org/p/fastapi-dbbackup
+
     permissions:
       id-token: write
+
     steps:
       - name: Download distribution packages
         uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          skip-existing: true
-      - name: Show GitHub context
-        run: |
-          echo "Repo: $GITHUB_REPOSITORY"
-          echo "Ref: $GITHUB_REF"
-          echo "Workflow: $GITHUB_WORKFLOW"
-          echo "Environment: pypi"
-
-  github-publish:
-    name: Upload to GitHub Packages
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Download distribution packages
-        uses: actions/download-artifact@v4
-        with:
-          name: python-package-distributions
-          path: dist/
-      - name: Publish to GitHub Packages
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://pypi.pkg.github.com/rajsolodev/
-          username: __token__
-          password: ${{ secrets.GH_PACKAGES_TOKEN }}
-          attestations: false
           skip-existing: true
