@@ -224,3 +224,59 @@ On the host machine, you can add a crontab entry to run the backup daily:
 # Using uv
 0 3 * * * cd /path/to/project && docker compose exec -T app uv run fastapi-dbbackup backup
 ```
+
+### Automating with Celery and Celery Beat
+
+If your FastAPI project already uses Celery, you can automate backups by creating a task and scheduling it with Celery Beat.
+
+#### 1. Define the Celery Task
+
+Create a task in your `tasks.py` that triggers the backup command:
+
+```python
+import subprocess
+from celery import shared_task
+
+@shared_task
+def run_db_backup():
+    try:
+        # Standard installation
+        subprocess.run(["fastapi-dbbackup", "backup"], check=True)
+        # OR if using uv:
+        # subprocess.run(["uv", "run", "fastapi-dbbackup", "backup"], check=True)
+        return "Backup successful"
+    except subprocess.CalledProcessError as e:
+        return f"Backup failed: {e}"
+```
+
+#### 2. Configure the Schedule
+
+In your Celery configuration or `main.py`, define the schedule for Celery Beat:
+
+```python
+from celery.schedules import crontab
+
+celery_app.conf.beat_schedule = {
+    'daily-db-backup': {
+        'task': 'app.tasks.run_db_backup',
+        'schedule': crontab(hour=3, minute=0),  # Daily at 3:00 AM
+    },
+}
+```
+
+#### 3. Run Celery Beat
+
+Ensure you have a `celery-beat` service in your `docker-compose.yml`:
+
+```yaml
+services:
+  celery-beat:
+    build: .
+    command: celery -A app.worker.celery_app beat --loglevel=info
+    environment:
+      - DATABASE_URL=...
+      # All DBBACKUP_* variables must be here too
+    depends_on:
+      - redis
+      - db
+```
