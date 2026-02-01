@@ -44,7 +44,7 @@ dev = [
 fastapi-dbbackup = "fastapi_dbbackup.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/rajsolodev/fastapi-dbbackup"
+Homepage = "https://rajsolodev.github.io/fastapi-dbbackup/"
 Repository = "https://github.com/rajsolodev/fastapi-dbbackup"
 "Bug Tracker" = "https://github.com/rajsolodev/fastapi-dbbackup/issues"
 
