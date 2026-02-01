@@ -3,11 +3,12 @@ import subprocess
 import sqlite3
 from datetime import datetime
 from pathlib import Path
+from sqlalchemy.engine.url import make_url
 from fastapi_dbbackup.base import BackupEngine
 
 class SQLiteBackup(BackupEngine):
     def backup(self) -> Path:
-        src_path = self.db_url.replace("sqlite:///", "")
+        src_path = make_url(self.db_url).database
         dest = self.output_dir / f"default-{datetime.now():%Y%m%d-%H%M%S}.sqlite3"
 
         try:
@@ -27,5 +28,5 @@ class SQLiteBackup(BackupEngine):
         return dest
 
     def restore(self, backup_path: Path):
-        dest = self.db_url.replace("sqlite:///", "")
+        dest = make_url(self.db_url).database
         shutil.copy2(backup_path, dest)

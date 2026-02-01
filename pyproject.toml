@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-dbbackup"
-version = "0.1.3"
+version = "0.1.4"
 description = "Database-native backup tool for FastAPI, SQLAlchemy, and SQLModel projects."
 authors = [
     { name = "Rajesh", email = "contact@geekyshows.com" }
