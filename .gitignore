@@ -26,6 +26,7 @@ backups/
 *.sql
 *.gz
 .env
+note.md
 
 # Exclude demo project from the main repository
 demo_project/
