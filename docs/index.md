@@ -1,6 +1,11 @@
 # fastapi-dbbackup
 
+[![PyPI version](https://badge.fury.io/py/fastapi-dbbackup.svg)](https://badge.fury.io/py/fastapi-dbbackup)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Database-native backup tool for **FastAPI**, **SQLAlchemy**, and **SQLModel** projects. Similar to `django-dbbackup`.
+
+[View on PyPI](https://pypi.org/project/fastapi-dbbackup/)
 
 ## Features
 
