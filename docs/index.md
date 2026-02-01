@@ -1,10 +1,10 @@
 # fastapi-dbbackup
 
-Database-native backup tool for FastAPI and SQLAlchemy. Similar to `django-dbbackup`.
+Database-native backup tool for **FastAPI**, **SQLAlchemy**, and **SQLModel** projects. Similar to `django-dbbackup`.
 
 ## Features
 
-- **Database Support**: SQLite, PostgreSQL, MySQL.
+- **Database Support**: SQLite, PostgreSQL, MySQL (SQL-only).
 - **Storage Support**: Local File System, AWS S3, DigitalOcean Spaces.
 - **Direct Streaming**: Direct pipe from database to cloud for Postgres/MySQL (No local disk usage).
 - **Compression**: Gzip compression supported (including streaming compression).

@@ -22,6 +22,6 @@ uv add fastapi-dbbackup
 
 ## Dependencies
 
-- **SQLAlchemy**: Used for database detection and URL parsing.
+- **SQLAlchemy**: Used for database detection and URL parsing (Automatically included if you use **SQLModel**).
 - **Boto3**: Required for S3/DigitalOcean cloud storage.
 - **Python-Dotenv**: Automatically loads your `.env` configuration.

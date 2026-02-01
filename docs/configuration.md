@@ -38,7 +38,7 @@ DBBACKUP_DIR=production_backups
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `DATABASE_URL` | SQLAlchemy-style URL. Required for connection details. Credentials and host are optional if your environment supports it (e.g. Trust auth). | - |
+| `DATABASE_URL` | SQLAlchemy-style URL. Required for connection details. Compatible with SQLModel connection strings. | - |
 | `DBBACKUP_ENGINE` | Explicit engine selection (`postgres`, `mysql`, `sqlite`, or `auto`) | `auto` |
 | `DBBACKUP_DIR` | Local directory for backups or S3 Prefix | `backups` |
 | `DBBACKUP_STORAGE` | Storage backend (`local` or `s3`) | `local` |

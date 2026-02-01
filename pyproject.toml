@@ -1,15 +1,15 @@
 [project]
 name = "fastapi-dbbackup"
-version = "0.1.2"
-description = "Database-native backup tool for FastAPI and SQLAlchemy"
+version = "0.1.3"
+description = "Database-native backup tool for FastAPI, SQLAlchemy, and SQLModel projects."
 authors = [
-    { name = "Rajesh Kumar", email = "contact@geekyshows.com" }
+    { name = "Rajesh", email = "contact@geekyshows.com" }
 ]
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
 requires-python = ">=3.8"
-keywords = ["fastapi", "sqlalchemy", "backup", "database", "postgres", "mysql", "sqlite", "s3"]
+keywords = ["fastapi", "sqlalchemy", "sqlmodel", "backup", "database", "postgres", "mysql", "sqlite", "s3"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
