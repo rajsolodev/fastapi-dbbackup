@@ -12,6 +12,14 @@ Database-native backup tool for FastAPI and SQLAlchemy. Similar to `django-dbbac
 - **Restoration**: Easy database restoration from backups.
 - **Retention**: Automatic purging of old backups.
 - **CLI**: Intuitive CLI with `backup`, `restore`, and `list` commands.
+15: 
+16: ### Database Version Support
+17: 
+18: | Database | Supported Versions | Requirement |
+19: | --- | --- | --- |
+20: | **PostgreSQL** | All (9.x - 17+) | `pg_dump` client version must be ≥ Server version |
+21: | **MySQL** | All (5.7, 8.0+) | `mysqldump` client version must be ≥ Server version |
+22: | **SQLite** | All | No special requirements |
 
 ## Installation
 
@@ -76,9 +84,9 @@ Yes! `fastapi-dbbackup` works great with Docker. However, because it uses native
 ```dockerfile
 FROM python:3.11-slim
 
-# Install database clients (Postgres/MySQL)
+# Install database clients (Postgres 16 / MySQL)
 RUN apt-get update && apt-get install -y \
-    postgresql-client \
+    postgresql-client-16 \
     default-mysql-client \
     sqlite3 \
     && rm -rf /var/lib/apt/lists/*

@@ -59,6 +59,7 @@ include = ["fastapi_dbbackup*"]
 [tool.uv.workspace]
 members = [
     "demo_project",
+    "fastapi-dbbackup-example",
     ".",
 ]
 

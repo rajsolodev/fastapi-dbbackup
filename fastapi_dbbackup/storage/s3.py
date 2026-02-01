@@ -44,7 +44,7 @@ class S3Storage(StorageBackend):
             key,
             ExtraArgs=extra_args
         )
-        return key
+        return local_path.name
 
     def upload_fileobj(self, fileobj: BinaryIO, remote_path: str) -> str:
         key = self._get_key(remote_path)
@@ -58,7 +58,7 @@ class S3Storage(StorageBackend):
             key,
             ExtraArgs=extra_args
         )
-        return key
+        return remote_path
 
     def download(self, remote_path: str, local_path: Path):
         key = self._get_key(remote_path)

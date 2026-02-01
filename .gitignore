@@ -30,6 +30,7 @@ note.md
 
 # Exclude demo project from the main repository
 demo_project/
+fastapi-dbbackup-example/
 
 # OS files
 .DS_Store

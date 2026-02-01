@@ -9,6 +9,7 @@
 - **Streaming**: Supported for backups.
 - **Security**: Uses `PGPASSWORD` environment variable.
 - **Robustness**: Dynamic argument building handles missing host/credentials (supports Trust auth).
+- **Version Compatibility**: Supports all Postgres versions. Ensure the `pg_dump` client version is equal to or higher than the server version.
 
 ## MySQL
 
@@ -17,6 +18,7 @@
 - **Streaming**: Supported for backups.
 - **Security**: Uses `MYSQL_PWD` environment variable.
 - **Robustness**: Dynamic argument building handles missing host/credentials (supports Trust auth).
+- **Version Compatibility**: Supports all MySQL versions. Ensure the `mysqldump` client version is equal to or higher than the server version.
 
 ## SQLite
 

@@ -35,6 +35,7 @@ nav:
   - Using the Tool:
       - Storage Backends: storage.md
       - Database Engines: engines.md
+      - Docker Usage: docker.md
       - CLI Reference: cli.md
 
 plugins:

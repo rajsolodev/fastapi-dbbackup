@@ -149,8 +149,14 @@ def cmd_restore(args):
     print(f"Restoring from {temp_path}...")
     engine.restore(temp_path)
     
+    # Cleanup temporary files
     if temp_path != local_path and temp_path.exists():
         temp_path.unlink()
+    
+    # If using remote storage, cleanup the downloaded backup file as well
+    if STORAGE != "local" and local_path.exists():
+        print(f"Cleaning up downloaded backup file {local_path}...")
+        local_path.unlink()
 
     print("Restore successful.")
 

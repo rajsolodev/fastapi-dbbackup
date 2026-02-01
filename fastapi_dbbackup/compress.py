@@ -16,5 +16,4 @@ def decompress(file: Path) -> Path:
     decompressed = file.with_suffix("")
     with gzip.open(file, "rb") as src, open(decompressed, "wb") as dst:
         shutil.copyfileobj(src, dst)
-    file.unlink()
     return decompressed
