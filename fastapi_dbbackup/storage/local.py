@@ -1,7 +1,9 @@
 import shutil
 from pathlib import Path
-from typing import List
+from typing import BinaryIO, List
+
 from fastapi_dbbackup.storage.base import StorageBackend
+
 
 class LocalStorage(StorageBackend):
     def __init__(self, backup_dir: Path):

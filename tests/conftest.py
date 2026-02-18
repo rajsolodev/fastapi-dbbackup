@@ -1,5 +1,7 @@
-import pytest
 from pathlib import Path
+
+import pytest
+
 
 @pytest.fixture
 def backup_dir(tmp_path) -> Path:
@@ -10,14 +12,17 @@ def backup_dir(tmp_path) -> Path:
     d.mkdir()
     return d
 
+
 @pytest.fixture
 def sqlite_url(tmp_path) -> str:
     db_path = tmp_path / "test.sqlite3"
     return f"sqlite:///{db_path}"
 
+
 @pytest.fixture
 def postgres_url() -> str:
     return "postgresql://user:pass@localhost:5432/dbname"
+
 
 @pytest.fixture
 def mysql_url() -> str:

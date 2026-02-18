@@ -3,8 +3,11 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import BinaryIO
+
 from sqlalchemy.engine.url import make_url
+
 from fastapi_dbbackup.base import BackupEngine
+
 
 class PostgresBackup(BackupEngine):
     def backup(self) -> Path:
@@ -22,7 +25,7 @@ class PostgresBackup(BackupEngine):
             cmd.extend(["-p", str(url.port)])
         if url.username:
             cmd.extend(["-U", url.username])
-        
+
         cmd.extend(["-f", str(outfile), url.database])
 
         subprocess.run(cmd, check=True, env=env)
@@ -41,7 +44,7 @@ class PostgresBackup(BackupEngine):
             cmd.extend(["-p", str(url.port)])
         if url.username:
             cmd.extend(["-U", url.username])
-        
+
         cmd.append(url.database)
 
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=env)
@@ -60,7 +63,7 @@ class PostgresBackup(BackupEngine):
             cmd.extend(["-p", str(url.port)])
         if url.username:
             cmd.extend(["-U", url.username])
-        
+
         cmd.extend(["-d", url.database, str(backup_path)])
 
         subprocess.run(cmd, check=True, env=env)

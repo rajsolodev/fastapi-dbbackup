@@ -1,5 +1,6 @@
 from sqlalchemy.engine.url import make_url
 
+
 def detect_backend(database_url: str) -> str:
     backend = make_url(database_url).get_backend_name()
 

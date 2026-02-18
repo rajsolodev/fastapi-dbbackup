@@ -1,6 +1,7 @@
 # tests/test_compress.py
 from fastapi_dbbackup.compress import compress, decompress
 
+
 def test_compress_file(tmp_path):
     file = tmp_path / "test.dump"
     file.write_text("hello")
@@ -10,6 +11,7 @@ def test_compress_file(tmp_path):
     assert gz.exists()
     assert gz.suffix.endswith(".gz")
     assert not file.exists()
+
 
 def test_decompress_file(tmp_path):
     file = tmp_path / "test.dump"

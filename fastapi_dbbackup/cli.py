@@ -1,34 +1,42 @@
 import argparse
-import sys
-import os
 import gzip
-import threading
+import os
 import shutil
+import sys
+import threading
 from datetime import datetime
-from pathlib import Path
-from typing import BinaryIO
+
+from fastapi_dbbackup.compress import compress, decompress
 from fastapi_dbbackup.config import (
-    DATABASE_URL, ENGINE, BACKUP_DIR, COMPRESS, STORAGE, 
-    RETENTION_DAYS, MAX_BACKUPS, S3_BUCKET, S3_REGION,
-    AWS_S3_ACCESS_KEY_ID, AWS_S3_SECRET_ACCESS_KEY, AWS_S3_ENDPOINT_URL, AWS_S3_DEFAULT_ACL
+    AWS_S3_ACCESS_KEY_ID,
+    AWS_S3_DEFAULT_ACL,
+    AWS_S3_ENDPOINT_URL,
+    AWS_S3_SECRET_ACCESS_KEY,
+    BACKUP_DIR,
+    COMPRESS,
+    DATABASE_URL,
+    ENGINE,
+    MAX_BACKUPS,
+    RETENTION_DAYS,
+    S3_BUCKET,
+    S3_REGION,
+    STORAGE,
 )
 from fastapi_dbbackup.detector import detect_backend
-from fastapi_dbbackup.compress import compress, decompress
-from fastapi_dbbackup.retention import purge_old_backups, purge_max_backups
-
-from fastapi_dbbackup.engines.sqlite import SQLiteBackup
-from fastapi_dbbackup.engines.postgres import PostgresBackup
 from fastapi_dbbackup.engines.mysql import MySQLBackup
-
+from fastapi_dbbackup.engines.postgres import PostgresBackup
+from fastapi_dbbackup.engines.sqlite import SQLiteBackup
+from fastapi_dbbackup.retention import purge_max_backups, purge_old_backups
 from fastapi_dbbackup.storage.local import LocalStorage
 from fastapi_dbbackup.storage.s3 import S3Storage
 
 ENGINE_MAP = {
     "sqlite": SQLiteBackup,
-    "postgresql": PostgresBackup, # detector returns postgresql for urls
+    "postgresql": PostgresBackup,  # detector returns postgresql for urls
     "postgres": PostgresBackup,
     "mysql": MySQLBackup,
 }
+
 
 def get_storage():
     if STORAGE == "s3":
@@ -36,38 +44,40 @@ def get_storage():
             print("Error: DBBACKUP_S3_BUCKET or AWS_STORAGE_BUCKET_NAME is required for s3 storage")
             sys.exit(1)
         return S3Storage(
-            bucket=S3_BUCKET, 
-            region=S3_REGION, 
+            bucket=S3_BUCKET,
+            region=S3_REGION,
             prefix=str(BACKUP_DIR),
             access_key=AWS_S3_ACCESS_KEY_ID,
             secret_key=AWS_S3_SECRET_ACCESS_KEY,
             endpoint_url=AWS_S3_ENDPOINT_URL,
-            default_acl=AWS_S3_DEFAULT_ACL
+            default_acl=AWS_S3_DEFAULT_ACL,
         )
     return LocalStorage(BACKUP_DIR)
+
 
 def get_engine():
     backend = ENGINE
     if backend == "auto":
         backend = detect_backend(DATABASE_URL)
-    
+
     engine_cls = ENGINE_MAP.get(backend)
     if not engine_cls:
         print(f"Error: Unsupported database backend '{backend}'")
         sys.exit(1)
     return engine_cls(DATABASE_URL, BACKUP_DIR)
 
+
 def cmd_backup(args):
     engine = get_engine()
     storage = get_storage()
-    
+
     print(f"Starting backup for {DATABASE_URL}...")
-    
+
     # Try streaming if not local storage and engine supports it
     stream = None
     if STORAGE != "local":
         stream = engine.backup_stream()
-        
+
     if stream:
         filename = f"default-{datetime.now():%Y%m%d-%H%M%S}.dump"
         if COMPRESS:
@@ -75,6 +85,7 @@ def cmd_backup(args):
             print("Streaming and compressing backup directly to cloud...")
             # Use os.pipe and a thread for streaming compression
             r, w = os.pipe()
+
             def compress_worker():
                 try:
                     with os.fdopen(w, "wb") as f_out:
@@ -82,7 +93,7 @@ def cmd_backup(args):
                             shutil.copyfileobj(stream, gz)
                 finally:
                     stream.close()
-            
+
             t = threading.Thread(target=compress_worker, daemon=True)
             t.start()
             fileobj = os.fdopen(r, "rb")
@@ -120,10 +131,11 @@ def cmd_backup(args):
 
     print(f"Backup successful: {remote_path}")
 
+
 def cmd_restore(args):
     engine = get_engine()
     storage = get_storage()
-    
+
     remote_path = args.filename
     if not remote_path:
         backups = storage.list_backups()
@@ -137,7 +149,7 @@ def cmd_restore(args):
     local_path = BACKUP_DIR / remote_path
     # Ensure backup directory exists before downloading
     local_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     print(f"Downloading {remote_path}...")
     storage.download(remote_path, local_path)
 
@@ -148,11 +160,11 @@ def cmd_restore(args):
 
     print(f"Restoring from {temp_path}...")
     engine.restore(temp_path)
-    
+
     # Cleanup temporary files
     if temp_path != local_path and temp_path.exists():
         temp_path.unlink()
-    
+
     # If using remote storage, cleanup the downloaded backup file as well
     if STORAGE != "local" and local_path.exists():
         print(f"Cleaning up downloaded backup file {local_path}...")
@@ -160,30 +172,36 @@ def cmd_restore(args):
 
     print("Restore successful.")
 
+
 def cmd_list(args):
     storage = get_storage()
     backups = storage.list_backups()
     if not backups:
         print("No backups found.")
         return
-    
+
     print(f"Backups in {STORAGE} storage:")
     for b in sorted(backups):
         print(f" - {b}")
+
 
 def main():
     parser = argparse.ArgumentParser(prog="fastapi-dbbackup", description="FastAPI Database Backup Tool")
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
 
     # Backup command
-    backup_parser = subparsers.add_parser("backup", help="Create a database backup")
-    
+    subparsers.add_parser("backup", help="Create a database backup")
+
     # Restore command
     restore_parser = subparsers.add_parser("restore", help="Restore a database from a backup")
-    restore_parser.add_argument("filename", nargs="?", help="Specific backup file to restore (defaults to latest)")
+    restore_parser.add_argument(
+        "filename",
+        nargs="?",
+        help="Specific backup file to restore (defaults to latest)",
+    )
 
     # List command
-    list_parser = subparsers.add_parser("list", help="List available backups")
+    subparsers.add_parser("list", help="List available backups")
 
     args = parser.parse_args()
 
@@ -195,6 +213,7 @@ def main():
         cmd_list(args)
     else:
         parser.print_help()
+
 
 if __name__ == "__main__":
     main()
