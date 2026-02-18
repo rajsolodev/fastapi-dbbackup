@@ -3,8 +3,11 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import BinaryIO
+
 from sqlalchemy.engine.url import make_url
+
 from fastapi_dbbackup.base import BackupEngine
+
 
 class MySQLBackup(BackupEngine):
     def backup(self) -> Path:
@@ -22,7 +25,7 @@ class MySQLBackup(BackupEngine):
             cmd.extend(["-P", str(url.port)])
         if url.username:
             cmd.extend(["-u", url.username])
-        
+
         cmd.append(url.database)
 
         with open(outfile, "w") as f:
@@ -43,7 +46,7 @@ class MySQLBackup(BackupEngine):
             cmd.extend(["-P", str(url.port)])
         if url.username:
             cmd.extend(["-u", url.username])
-        
+
         cmd.append(url.database)
 
         process = subprocess.Popen(cmd, stdout=subprocess.PIPE, env=env)
@@ -62,7 +65,7 @@ class MySQLBackup(BackupEngine):
             cmd.extend(["-P", str(url.port)])
         if url.username:
             cmd.extend(["-u", url.username])
-        
+
         cmd.append(url.database)
 
         with open(backup_path, "r") as f:

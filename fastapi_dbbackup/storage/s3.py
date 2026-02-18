@@ -1,30 +1,33 @@
-import boto3
 from pathlib import Path
-from typing import List, Optional
+from typing import BinaryIO, List, Optional
+
+import boto3
+
 from fastapi_dbbackup.storage.base import StorageBackend
+
 
 class S3Storage(StorageBackend):
     def __init__(
-        self, 
-        bucket: str, 
-        region: Optional[str] = None, 
+        self,
+        bucket: str,
+        region: Optional[str] = None,
         prefix: str = "",
         access_key: Optional[str] = None,
         secret_key: Optional[str] = None,
         endpoint_url: Optional[str] = None,
-        default_acl: str = "private"
+        default_acl: str = "private",
     ):
         self.bucket_name = bucket
         self.prefix = prefix.strip("/")
         self.default_acl = default_acl
-        
+
         client_kwargs = {"region_name": region}
         if access_key and secret_key:
             client_kwargs["aws_access_key_id"] = access_key
             client_kwargs["aws_secret_access_key"] = secret_key
         if endpoint_url:
             client_kwargs["endpoint_url"] = endpoint_url
-            
+
         self.s3 = boto3.client("s3", **client_kwargs)
 
     def _get_key(self, name: str) -> str:
@@ -37,13 +40,8 @@ class S3Storage(StorageBackend):
         extra_args = {}
         if self.default_acl:
             extra_args["ACL"] = self.default_acl
-            
-        self.s3.upload_file(
-            str(local_path), 
-            self.bucket_name, 
-            key,
-            ExtraArgs=extra_args
-        )
+
+        self.s3.upload_file(str(local_path), self.bucket_name, key, ExtraArgs=extra_args)
         return local_path.name
 
     def upload_fileobj(self, fileobj: BinaryIO, remote_path: str) -> str:
@@ -51,13 +49,8 @@ class S3Storage(StorageBackend):
         extra_args = {}
         if self.default_acl:
             extra_args["ACL"] = self.default_acl
-            
-        self.s3.upload_fileobj(
-            fileobj,
-            self.bucket_name,
-            key,
-            ExtraArgs=extra_args
-        )
+
+        self.s3.upload_fileobj(fileobj, self.bucket_name, key, ExtraArgs=extra_args)
         return remote_path
 
     def download(self, remote_path: str, local_path: Path):
@@ -72,7 +65,7 @@ class S3Storage(StorageBackend):
                 key = obj["Key"]
                 # Return only the filename part if it's within the prefix
                 if self.prefix and key.startswith(f"{self.prefix}/"):
-                    backups.append(key[len(self.prefix)+1:])
+                    backups.append(key[len(self.prefix) + 1 :])
                 elif not self.prefix:
                     backups.append(key)
         return backups

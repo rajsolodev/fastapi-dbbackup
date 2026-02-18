@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import BinaryIO, Optional
+from typing import BinaryIO
+
 
 class BackupEngine(ABC):
     def __init__(self, db_url: str, output_dir: Path):

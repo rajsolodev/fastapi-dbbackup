@@ -1,10 +1,13 @@
 import shutil
-import subprocess
 import sqlite3
+import subprocess
 from datetime import datetime
 from pathlib import Path
+
 from sqlalchemy.engine.url import make_url
+
 from fastapi_dbbackup.base import BackupEngine
+
 
 class SQLiteBackup(BackupEngine):
     def backup(self) -> Path:
@@ -16,7 +19,7 @@ class SQLiteBackup(BackupEngine):
             subprocess.run(
                 ["sqlite3", src_path, f".backup {dest}"],
                 check=True,
-                capture_output=True
+                capture_output=True,
             )
         except (subprocess.CalledProcessError, FileNotFoundError):
             # Fallback to python sqlite3 module
